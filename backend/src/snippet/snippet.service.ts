@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Snippet, SnippetDocument } from "./snippet.schema";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { CreateSnippetDto } from "src/dto/CreateSnippet.dto";
 import { UpdateSnippetDto } from "src/dto/UpdateSnippet.dto";
+
+export type MongoID = Types.ObjectId | string;
 
 @Injectable()
 export class SnippetService {
@@ -12,7 +14,7 @@ export class SnippetService {
         private readonly snippetModel: Model<SnippetDocument>,
     ) { }
 
-    public async create(createSnippetDto: CreateSnippetDto) {
+    public async createSnippet(createSnippetDto: CreateSnippetDto) {
         const newSnippet = new this.snippetModel(createSnippetDto);
 
         return newSnippet.save();
@@ -55,7 +57,7 @@ export class SnippetService {
         };
     }
 
-    public async findOneSnippet(id: string) {
+    public async findOneSnippet(id: MongoID) {
         const snippet = await this.snippetModel.findById(id).exec();
 
         if (!snippet) throw new NotFoundException("Snippet not found");
@@ -63,9 +65,9 @@ export class SnippetService {
         return snippet;
     }
 
-    public async updateSnippet(id: string, updateSnippetDto: UpdateSnippetDto) {
+    public async updateSnippet(id: MongoID, updateSnippetDto: UpdateSnippetDto) {
         const updatedSnippet = await this.snippetModel
-            .findByIdAndUpdate(id, updateSnippetDto, { new: true })
+            .findByIdAndUpdate(id, updateSnippetDto, { returnDocument: 'after' })
             .exec();
 
         if (!updatedSnippet) throw new NotFoundException("Snippet not found");
@@ -73,7 +75,7 @@ export class SnippetService {
         return updatedSnippet;
     }
 
-    public async deleteSnippet(id: string) {
+    public async deleteSnippet(id: MongoID) {
         const result = await this.snippetModel.findByIdAndDelete(id).exec();
 
         if (!result) throw new NotFoundException("Snippet not found");
