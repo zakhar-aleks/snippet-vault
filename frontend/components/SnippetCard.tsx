@@ -36,13 +36,13 @@ const SnippetCard = ({ _id, title, content, type, tags, onDelete, onEdit }: Snip
             <div className="mt-auto flex gap-4 pt-4 border-t border-gray-700/50">
                 <button
                     onClick={() => onEdit(_id)}
-                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors"
+                    className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
                 >
                     Edit
                 </button>
                 <button
                     onClick={() => onDelete(_id)}
-                    className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors"
+                    className="text-sm font-medium text-red-400 hover:text-red-300 transition-colors cursor-pointer"
                 >
                     Delete
                 </button>
