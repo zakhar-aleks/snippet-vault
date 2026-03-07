@@ -76,6 +76,10 @@ export default function HomePage() {
 		router.push(`/edit/${id}`);
 	};
 
+	const handleDetails = (id: string) => {
+		router.push(`/snippets/${id}`)
+	}
+
 	return (
 		<main className="min-h-screen bg-gray-900 text-gray-100 p-6 md:p-10">
 			<div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
@@ -131,6 +135,7 @@ export default function HomePage() {
 									{...snippet}
 									onDelete={handleDelete}
 									onEdit={handleEdit}
+									onDetails={handleDetails}
 								/>
 							))}
 						</div>

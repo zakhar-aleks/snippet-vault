@@ -20,7 +20,6 @@ export default function EditSnippetPage() {
         const fetchSnippet = async () => {
             try {
                 setLoading(true);
-                // Отримуємо дані одного сніпета
                 const data = await SnippetService.getOneSnippet(id);
                 setSnippet(data);
             } catch (err: any) {

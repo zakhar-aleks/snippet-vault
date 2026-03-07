@@ -10,6 +10,8 @@ export interface ISnippet {
     content: string;
     tags?: string[];
     type: SnippetType;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface CreateSnippetDto {
