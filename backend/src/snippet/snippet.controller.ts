@@ -1,7 +1,7 @@
-import { Controller } from '@nestjs/common';
-import { SnippetService } from './snippet.service';
+import { Controller } from "@nestjs/common";
+import { SnippetService } from "./snippet.service";
 
-@Controller('snippet')
+@Controller("snippet")
 export class SnippetController {
-  constructor(private readonly snippetService: SnippetService) {}
+	constructor(private readonly snippetService: SnippetService) {}
 }
