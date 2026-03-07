@@ -34,13 +34,18 @@ export class SnippetService {
         }
 
         if (q) {
-            filter.title = { $regex: new RegExp(q, "i") };
+            const regex = new RegExp(q, "i");
+
+            filter.$or = [
+                { title: { $regex: regex } },
+                { content: { $regex: regex } },
+            ];
         }
 
         const skip = (page - 1) * limit;
-
         const items = await this.snippetModel
             .find(filter)
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .exec();
@@ -51,7 +56,8 @@ export class SnippetService {
             data: items,
             meta: {
                 total,
-                page,
+                page: Number(page),
+                limit: Number(limit),
                 lastPage: Math.ceil(total / limit),
             },
         };

@@ -1,30 +1,35 @@
 import api from "@/lib/axios";
 import { ISnippet, CreateSnippetDto } from "@/types";
 
+export interface SnippetResponse {
+    data: ISnippet[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        lastPage: number;
+    };
+}
+
 export const SnippetService = {
     getAllSnippets: async (params?: { page?: number; limit?: number; q?: string; tag?: string }) => {
-        const { data } = await api.get<{ data: ISnippet[]; total: number }>('/snippets', { params });
-
-        return data;
+        const response = await api.get<SnippetResponse>('/snippet', { params }) as unknown as SnippetResponse;
+        return response;
     },
 
     getOneSnippet: async (id: string) => {
-        const { data } = await api.get<ISnippet>(`/snippets/${id}`);
-
-        return data;
+        return await api.get<ISnippet>(`/snippet/${id}`) as unknown as ISnippet;
     },
 
     createSnippet: async (payload: CreateSnippetDto) => {
-        const { data } = await api.post<ISnippet>('/snippets', payload);
-        return data;
+        return await api.post<ISnippet>('/snippet', payload) as unknown as ISnippet;
     },
 
     updateSnippet: async (id: string, payload: Partial<CreateSnippetDto>) => {
-        const { data } = await api.patch<ISnippet>(`/snippets/${id}`, payload);
-        return data;
+        return await api.patch<ISnippet>(`/snippet/${id}`, payload) as unknown as ISnippet;
     },
 
     deleteSnippet: async (id: string) => {
-        await api.delete(`/snippets/${id}`);
+        await api.delete(`/snippet/${id}`);
     },
 };
