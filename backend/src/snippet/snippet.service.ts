@@ -1,4 +1,83 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Snippet, SnippetDocument } from "./snippet.schema";
+import { Model } from "mongoose";
+import { CreateSnippetDto } from "src/dto/CreateSnippet.dto";
+import { UpdateSnippetDto } from "src/dto/UpdateSnippet.dto";
 
 @Injectable()
-export class SnippetService {}
+export class SnippetService {
+    constructor(
+        @InjectModel(Snippet.name)
+        private readonly snippetModel: Model<SnippetDocument>,
+    ) { }
+
+    public async create(createSnippetDto: CreateSnippetDto) {
+        const newSnippet = new this.snippetModel(createSnippetDto);
+
+        return newSnippet.save();
+    }
+
+    public async findAllSnippets(query: {
+        page?: number;
+        limit?: number;
+        q?: string;
+        tag?: string;
+    }) {
+        const { page = 1, limit = 10, q, tag } = query;
+        const filter: any = {};
+
+        if (tag) {
+            filter.tags = tag;
+        }
+
+        if (q) {
+            filter.title = { $regex: new RegExp(q, "i") };
+        }
+
+        const skip = (page - 1) * limit;
+
+        const items = await this.snippetModel
+            .find(filter)
+            .skip(skip)
+            .limit(limit)
+            .exec();
+
+        const total = await this.snippetModel.countDocuments(filter);
+
+        return {
+            data: items,
+            meta: {
+                total,
+                page,
+                lastPage: Math.ceil(total / limit),
+            },
+        };
+    }
+
+    public async findOneSnippet(id: string) {
+        const snippet = await this.snippetModel.findById(id).exec();
+
+        if (!snippet) throw new NotFoundException("Snippet not found");
+
+        return snippet;
+    }
+
+    public async updateSnippet(id: string, updateSnippetDto: UpdateSnippetDto) {
+        const updatedSnippet = await this.snippetModel
+            .findByIdAndUpdate(id, updateSnippetDto, { new: true })
+            .exec();
+
+        if (!updatedSnippet) throw new NotFoundException("Snippet not found");
+
+        return updatedSnippet;
+    }
+
+    public async deleteSnippet(id: string) {
+        const result = await this.snippetModel.findByIdAndDelete(id).exec();
+
+        if (!result) throw new NotFoundException("Snippet not found");
+
+        return { deleted: true };
+    }
+}
