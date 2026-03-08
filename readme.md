@@ -1,6 +1,9 @@
 # Snippet Vault
 
-## Installation
+## Running with docker
+docker-compose up --build
+
+## Manual Installation
 
 ### Backend
 1. Navigate to the backend directory.
@@ -17,7 +20,8 @@
 ## Environment Variables
 
 ### Backend (.env)
-* `MONGO_URI`: MongoDB connection string.
+* `DB_URI`: MongoDB connection string.
+* `FRONTEND_URL`: URL of your frontend deployment.
 * `PORT`: Port for the NestJS server (e.g., 8080).
 
 ### Frontend (.env.local)

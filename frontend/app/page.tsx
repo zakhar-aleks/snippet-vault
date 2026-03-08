@@ -39,7 +39,7 @@ export default function HomePage() {
 			setMeta(response.meta);
 		} catch (err) {
 			console.error(err);
-			setError("Не вдалося завантажити сніпети.");
+			setError("Is not able to fetch snippets");
 		} finally {
 			setLoading(false);
 		}
@@ -56,7 +56,7 @@ export default function HomePage() {
 	};
 
 	const handleDelete = async (id: string) => {
-		if (!confirm("Ви впевнені, що хочете видалити цей сніпет?")) return;
+		if (!confirm("Are you sure you want to delete this snippet")) return;
 
 		try {
 			await SnippetService.deleteSnippet(id);
@@ -68,7 +68,7 @@ export default function HomePage() {
 			} else { }
 
 		} catch (err) {
-			alert("Помилка при видаленні");
+			alert("Error encountered while deleting");
 		}
 	};
 
