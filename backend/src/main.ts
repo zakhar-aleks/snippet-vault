@@ -7,10 +7,10 @@ async function bootstrap() {
 
 	app.useGlobalPipes(new ValidationPipe());
 	app.enableCors({
-		origin: 'https://snippet-vault-zakhar-gdpsx0907.vercel.app/',
+		origin: process.env.FRONT_URL ?? "http://localhost:3000",
 		credentials: true,
 	});
 
-	await app.listen(process.env.PORT ?? 8080);
+	await app.listen(process.env.PORT ?? 8080, '0.0.0.0');
 }
 bootstrap();
